@@ -1,0 +1,5 @@
+*.jsonl
+*.test
+.DStore
+bin/*
+dist/*
