@@ -1,0 +1,20 @@
+language: go
+
+go:
+  - "1.10"
+
+install:
+  - "curl -L https://github.com/golang/dep/raw/master/install.sh | sh"
+  - "dep ensure"
+
+script:
+  - make test
+  - make
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: curl -sL https://git.io/goreleaser | bash
+  on:
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux
