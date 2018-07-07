@@ -49,14 +49,6 @@ func versionString() string {
 	return buffer.String()
 }
 
-func printHexDiff(leaked *[]string, dump *HeapDump) {
-	for _, index := range *leaked {
-		if item, ok := dump.Entries[index]; ok {
-			fmt.Printf("%s\n", item.Address)
-		}
-	}
-}
-
 func logMsg(msg string) {
 	if !*silentFlag {
 		fmt.Println(msg)
@@ -68,6 +60,14 @@ func loadDump(filePath string) (*HeapDump, error) {
 	dump, err := NewHeapDump(filePath)
 	logMsg(fmt.Sprintf("    Loaded %d addresses", len(dump.Index)))
 	return dump, err
+}
+
+func printHexDiff(leaked *[]string, dump *HeapDump) {
+	for _, index := range *leaked {
+		if entry, ok := dump.Entries[index]; ok {
+			fmt.Println(entry.Object.Address)
+		}
+	}
 }
 
 func main() {
@@ -93,7 +93,7 @@ func main() {
 
 	if *formatFlag == "hex" {
 		printHexDiff(leaked, dump2)
-	} //  else if *formatFlag == 'full' {
-	//		printFullDiff(leaked, dump2)
-	// }
+	} else if *formatFlag == "full" {
+		dump2.PrintMatchingJSON(leaked)
+	}
 }

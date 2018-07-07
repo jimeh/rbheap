@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson48125c2bDecodeGithubComJimehRbheapleak(in *jlexer.Lexer, out *HeapEntry) {
+func easyjsonE44bcf2dDecodeGithubComJimehRbheapleak(in *jlexer.Lexer, out *Object) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -50,7 +50,7 @@ func easyjson48125c2bDecodeGithubComJimehRbheapleak(in *jlexer.Lexer, out *HeapE
 		in.Consumed()
 	}
 }
-func easyjson48125c2bEncodeGithubComJimehRbheapleak(out *jwriter.Writer, in HeapEntry) {
+func easyjsonE44bcf2dEncodeGithubComJimehRbheapleak(out *jwriter.Writer, in Object) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -78,25 +78,25 @@ func easyjson48125c2bEncodeGithubComJimehRbheapleak(out *jwriter.Writer, in Heap
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v HeapEntry) MarshalJSON() ([]byte, error) {
+func (v Object) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson48125c2bEncodeGithubComJimehRbheapleak(&w, v)
+	easyjsonE44bcf2dEncodeGithubComJimehRbheapleak(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v HeapEntry) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson48125c2bEncodeGithubComJimehRbheapleak(w, v)
+func (v Object) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonE44bcf2dEncodeGithubComJimehRbheapleak(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *HeapEntry) UnmarshalJSON(data []byte) error {
+func (v *Object) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson48125c2bDecodeGithubComJimehRbheapleak(&r, v)
+	easyjsonE44bcf2dDecodeGithubComJimehRbheapleak(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *HeapEntry) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson48125c2bDecodeGithubComJimehRbheapleak(l, v)
+func (v *Object) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonE44bcf2dDecodeGithubComJimehRbheapleak(l, v)
 }

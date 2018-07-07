@@ -1,9 +1,11 @@
 package main
 
 import (
-	"encoding/json"
+	"bufio"
+	"fmt"
 	"io"
 	"os"
+	"sort"
 )
 
 func NewHeapDump(file string) (*HeapDump, error) {
@@ -16,7 +18,7 @@ func NewHeapDump(file string) (*HeapDump, error) {
 type HeapDump struct {
 	File    string
 	Index   []string
-	Entries map[string]*HeapEntry
+	Entries map[string]*Entry
 }
 
 // Process processes the heap dump
@@ -28,20 +30,71 @@ func (s *HeapDump) Process() error {
 		return err
 	}
 
-	s.Entries = map[string]*HeapEntry{}
+	s.Entries = map[string]*Entry{}
 
-	d := json.NewDecoder(file)
+	reader := bufio.NewReader(file)
+	var offset int64 = -1
 	for {
-		var e HeapEntry
-		if err := d.Decode(&e); err == io.EOF {
+		offset++
+		line, err := reader.ReadBytes(byte('\n'))
+		if err == io.EOF {
 			break
 		} else if err != nil {
 			return err
 		}
-		index := e.Address + ":" + e.Type
-		s.Entries[index] = &e
-		s.Index = append(s.Index, index)
+
+		entry, err := NewEntry(line)
+		if err != nil {
+			return err
+		}
+
+		entry.Offset = offset
+		s.Entries[entry.Index] = entry
+		s.Index = append(s.Index, entry.Index)
 	}
 
 	return nil
+}
+
+func (s *HeapDump) PrintMatchingJSON(indexes *[]string) error {
+	file, err := os.Open(s.File)
+	defer file.Close()
+
+	if err != nil {
+		return err
+	}
+
+	reader := bufio.NewReader(file)
+	offsets := s.matchingOffsets(indexes)
+
+	var current int64 = 0
+	var offset int64 = -1
+
+	for {
+		offset++
+		line, err := reader.ReadBytes(byte('\n'))
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return err
+		}
+
+		if offset == offsets[current] {
+			current++
+			fmt.Print(string(line))
+		}
+	}
+
+	return nil
+}
+
+func (s *HeapDump) matchingOffsets(indexes *[]string) []int64 {
+	var offsets []int64
+
+	for _, index := range *indexes {
+		offsets = append(offsets, s.Entries[index].Offset)
+	}
+
+	sort.Slice(offsets, func(i, j int) bool { return offsets[i] < offsets[j] })
+	return offsets
 }
