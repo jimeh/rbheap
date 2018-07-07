@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"strings"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -15,7 +16,9 @@ var (
 	date    = "unknown"
 
 	formatFlag = kingpin.Flag("format", "Output format (\"hex\" or \"full\")").
-			Default("hex").String()
+			Short('f').Default("hex").String()
+	silentFlag = kingpin.Flag("silent", "Silence all info output").
+			Short('s').Bool()
 
 	file1Path = kingpin.Arg("dump-1", "Path to first heap dump file.").
 			Required().String()
@@ -27,44 +30,23 @@ var (
 
 func versionString() string {
 	var buffer bytes.Buffer
+	var meta []string
+
 	buffer.WriteString(fmt.Sprintf("%s %s", name, version))
 
 	if commit != "unknown" {
-		buffer.WriteString(fmt.Sprintf(" (%s", commit))
-		if date != "unknown" {
-			buffer.WriteString(fmt.Sprintf(" %s", date))
-		}
-		buffer.WriteString(")")
+		meta = append(meta, commit)
+	}
+
+	if date != "unknown" {
+		meta = append(meta, date)
+	}
+
+	if len(meta) > 0 {
+		buffer.WriteString(fmt.Sprintf(" (%s)", strings.Join(meta, ", ")))
 	}
 
 	return buffer.String()
-}
-
-// diffsect removes all items in `a` from `b`, then removes all items from `b`
-// which are not in `c`. Effectively: intersect(difference(b, a), c)
-func diffsect(a, b, c *[]string) *[]string {
-	result := []string{}
-	mapA := map[string]bool{}
-	mapC := map[string]bool{}
-
-	for _, x := range *a {
-		mapA[x] = true
-	}
-
-	for _, x := range *c {
-		mapC[x] = true
-	}
-
-	for _, x := range *b {
-		_, okA := mapA[x]
-		_, okC := mapC[x]
-
-		if !okA && okC {
-			result = append(result, x)
-		}
-	}
-
-	return &result
 }
 
 func printHexDiff(leaked *[]string, dump *HeapDump) {
@@ -75,30 +57,37 @@ func printHexDiff(leaked *[]string, dump *HeapDump) {
 	}
 }
 
+func logMsg(msg string) {
+	if !*silentFlag {
+		fmt.Println(msg)
+	}
+}
+
+func loadDump(filePath string) (*HeapDump, error) {
+	logMsg(fmt.Sprintf("--> Loading %s...", filePath))
+	dump, err := NewHeapDump(filePath)
+	logMsg(fmt.Sprintf("    Loaded %d addresses", len(dump.Index)))
+	return dump, err
+}
+
 func main() {
 	kingpin.Version(versionString())
 	kingpin.Parse()
 
-	fmt.Printf("--> Loading %s...\n", *file1Path)
-	dump1, err := NewHeapDump(*file1Path)
+	dump1, err := loadDump(*file1Path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("    Loaded %d addresses\n", len(dump1.Index))
 
-	fmt.Printf("--> Loading %s...\n", *file2Path)
-	dump2, err := NewHeapDump(*file2Path)
+	dump2, err := loadDump(*file2Path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("    Loaded %d addresses\n", len(dump2.Index))
 
-	fmt.Printf("--> Loading %s...\n", *file3Path)
-	dump3, err := NewHeapDump(*file3Path)
+	dump3, err := loadDump(*file3Path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("    Loaded %d addresses\n", len(dump3.Index))
 
 	leaked := diffsect(&dump1.Index, &dump2.Index, &dump3.Index)
 
