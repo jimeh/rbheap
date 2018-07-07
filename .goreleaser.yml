@@ -1,6 +1,6 @@
 project_name: rbheapleak
 builds:
-  - main: rbheapleak.go
+  - main: main.go
     binary: rbheapleak
     flags: -a
     env:
