@@ -15,9 +15,9 @@ func NewHeapDump(file string) (*HeapDump, error) {
 
 // HeapDump contains all relevant data for a single heap dump.
 type HeapDump struct {
-	File  string
-	Index []string
-	Items map[string]*HeapItem
+	File    string
+	Index   []string
+	Entries map[string]*HeapEntry
 }
 
 // Process processes the heap dump
@@ -29,7 +29,7 @@ func (s *HeapDump) Process() error {
 		return err
 	}
 
-	s.Items = map[string]*HeapItem{}
+	s.Entries = map[string]*HeapEntry{}
 
 	reader := bufio.NewReader(file)
 	for {
@@ -56,14 +56,14 @@ func (s *HeapDump) ProcessLine(line []byte) error {
 
 	if len(item.Address) > 0 {
 		index := item.Address + ":" + item.Type
-		s.Items[index] = item
+		s.Entries[index] = item
 		s.Index = append(s.Index, index)
 	}
 	return nil
 }
 
-func (s *HeapDump) Parse(itemJSON []byte) (*HeapItem, error) {
-	var i HeapItem
+func (s *HeapDump) Parse(itemJSON []byte) (*HeapEntry, error) {
+	var i HeapEntry
 	err := json.Unmarshal(itemJSON, &i)
 
 	return &i, err

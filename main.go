@@ -69,7 +69,7 @@ func diffsect(a, b, c *[]string) *[]string {
 
 func printHexDiff(leaked *[]string, dump *HeapDump) {
 	for _, index := range *leaked {
-		if item, ok := dump.Items[index]; ok {
+		if item, ok := dump.Entries[index]; ok {
 			fmt.Printf("%s\n", item.Address)
 		}
 	}
