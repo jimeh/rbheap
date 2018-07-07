@@ -89,7 +89,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	leaked := diffsect(&dump1.Index, &dump2.Index, &dump3.Index)
+	leaked := DiffSect(&dump1.Index, &dump2.Index, &dump3.Index)
 
 	if *formatFlag == "hex" {
 		printHexDiff(leaked, dump2)

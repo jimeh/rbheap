@@ -1,8 +1,8 @@
 package main
 
-// diffsect removes all items in `a` from `b`, then removes all items from `b`
+// DiffSect removes all items in `a` from `b`, then removes all items from `b`
 // which are not in `c`. Effectively: intersect(difference(b, a), c)
-func diffsect(a, b, c *[]string) *[]string {
+func DiffSect(a, b, c *[]string) *[]string {
 	result := []string{}
 	mapA := map[string]bool{}
 	mapC := map[string]bool{}
