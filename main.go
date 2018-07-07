@@ -40,20 +40,22 @@ func versionString() string {
 	return buffer.String()
 }
 
-func diff(a, b, c *HeapDump) *[]string {
+// diffsect removes all items in `a` from `b`, then removes all items from `b`
+// which are not in `c`. Effectively: intersect(difference(b, a), c)
+func diffsect(a, b, c *[]string) *[]string {
 	result := []string{}
 	mapA := map[string]bool{}
 	mapC := map[string]bool{}
 
-	for _, x := range a.Index {
+	for _, x := range *a {
 		mapA[x] = true
 	}
 
-	for _, x := range c.Index {
+	for _, x := range *c {
 		mapC[x] = true
 	}
 
-	for _, x := range b.Index {
+	for _, x := range *b {
 		_, okA := mapA[x]
 		_, okC := mapC[x]
 
@@ -98,7 +100,7 @@ func main() {
 	}
 	fmt.Printf("    Loaded %d addresses\n", len(dump3.Index))
 
-	leaked := diff(dump1, dump2, dump3)
+	leaked := diffsect(&dump1.Index, &dump2.Index, &dump3.Index)
 
 	if *formatFlag == "hex" {
 		printHexDiff(leaked, dump2)
