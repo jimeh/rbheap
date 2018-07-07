@@ -1,8 +1,7 @@
 package main
 
 import (
-	"bufio"
-	json "encoding/json"
+	"encoding/json"
 	"io"
 	"os"
 )
@@ -31,40 +30,18 @@ func (s *HeapDump) Process() error {
 
 	s.Entries = map[string]*HeapEntry{}
 
-	reader := bufio.NewReader(file)
+	d := json.NewDecoder(file)
 	for {
-		line, err := reader.ReadBytes(byte('\n'))
-		s.ProcessLine(line)
-
-		if err != nil {
+		var e HeapEntry
+		if err := d.Decode(&e); err == io.EOF {
 			break
+		} else if err != nil {
+			return err
 		}
-	}
-
-	if err != io.EOF {
-		return err
-	}
-
-	return nil
-}
-
-func (s *HeapDump) ProcessLine(line []byte) error {
-	item, err := s.Parse(line)
-	if err != nil {
-		return err
-	}
-
-	if len(item.Address) > 0 {
-		index := item.Address + ":" + item.Type
-		s.Entries[index] = item
+		index := e.Address + ":" + e.Type
+		s.Entries[index] = &e
 		s.Index = append(s.Index, index)
 	}
+
 	return nil
-}
-
-func (s *HeapDump) Parse(itemJSON []byte) (*HeapEntry, error) {
-	var i HeapEntry
-	err := json.Unmarshal(itemJSON, &i)
-
-	return &i, err
 }
