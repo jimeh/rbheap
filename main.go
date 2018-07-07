@@ -55,14 +55,14 @@ func logMsg(msg string) {
 	}
 }
 
-func loadDump(filePath string) (*HeapDump, error) {
+func loadDump(filePath string) (*ObjectDump, error) {
 	logMsg(fmt.Sprintf("--> Loading %s...", filePath))
-	dump, err := NewHeapDump(filePath)
+	dump, err := NewObjectDump(filePath)
 	logMsg(fmt.Sprintf("    Loaded %d addresses", len(dump.Index)))
 	return dump, err
 }
 
-func printHexDiff(leaked *[]string, dump *HeapDump) {
+func printHexDiff(leaked *[]string, dump *ObjectDump) {
 	for _, index := range *leaked {
 		if entry, ok := dump.Entries[index]; ok {
 			fmt.Println(entry.Object.Address)

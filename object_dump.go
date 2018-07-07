@@ -8,21 +8,21 @@ import (
 	"sort"
 )
 
-func NewHeapDump(file string) (*HeapDump, error) {
-	heapDump := HeapDump{File: file}
+func NewObjectDump(file string) (*ObjectDump, error) {
+	heapDump := ObjectDump{File: file}
 	err := heapDump.Process()
 	return &heapDump, err
 }
 
-// HeapDump contains all relevant data for a single heap dump.
-type HeapDump struct {
+// ObjectDump contains all relevant data for a single heap dump.
+type ObjectDump struct {
 	File    string
 	Index   []string
 	Entries map[string]*Entry
 }
 
 // Process processes the heap dump
-func (s *HeapDump) Process() error {
+func (s *ObjectDump) Process() error {
 	file, err := os.Open(s.File)
 	defer file.Close()
 
@@ -56,7 +56,7 @@ func (s *HeapDump) Process() error {
 	return nil
 }
 
-func (s *HeapDump) PrintMatchingJSON(indexes *[]string) error {
+func (s *ObjectDump) PrintMatchingJSON(indexes *[]string) error {
 	file, err := os.Open(s.File)
 	defer file.Close()
 
@@ -88,7 +88,7 @@ func (s *HeapDump) PrintMatchingJSON(indexes *[]string) error {
 	return nil
 }
 
-func (s *HeapDump) matchingOffsets(indexes *[]string) []int64 {
+func (s *ObjectDump) matchingOffsets(indexes *[]string) []int64 {
 	var offsets []int64
 
 	for _, index := range *indexes {
