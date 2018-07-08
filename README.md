@@ -38,7 +38,7 @@ Usage:
   rbheap leak [flags] <dump-A> <dump-B> <dump-C>
 
 Flags:
-  -f, --format string   output format: "hex" / "full" (default "hex")
+  -f, --format string   output format: "hex" / "json" (default "hex")
   -h, --help            help for leak
   -v, --verbose         print verbose information
 ```

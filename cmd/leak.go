@@ -38,7 +38,7 @@ objects are present in both B and C, and not present in A.`,
 		switch leakOpts.Format {
 		case "hex":
 			finder.PrintLeakedAddresses()
-		case "full":
+		case "json":
 			finder.PrintLeakedObjects()
 		default:
 			usage_er(
@@ -55,7 +55,7 @@ func init() {
 	leakCmd.PersistentFlags().StringVarP(
 		&leakOpts.Format,
 		"format", "f", "hex",
-		"output format: \"hex\" / \"full\"",
+		"output format: \"hex\" / \"json\"",
 	)
 
 	leakCmd.PersistentFlags().BoolVarP(
