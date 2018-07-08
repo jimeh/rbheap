@@ -1,4 +1,4 @@
-# rbheap
+# rbheap [![Build Status](https://travis-ci.org/jimeh/rbheap.png)](https://travis-ci.org/jimeh/rbheap)
 
 A tool for working with and analyzing Ruby processes' heap dumps created via
 `ObjectSpace.dump_all`.
