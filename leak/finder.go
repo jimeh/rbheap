@@ -1,24 +1,28 @@
-package main
+package leak
 
-import "fmt"
+import (
+	"fmt"
 
-func NewLeakFinder(file1, file2, file3 string) *LeakFinder {
-	return &LeakFinder{
+	"github.com/jimeh/rbheapleak/obj"
+)
+
+func NewFinder(file1, file2, file3 string) *Finder {
+	return &Finder{
 		FilePaths: [3]string{file1, file2, file3},
 	}
 }
 
-type LeakFinder struct {
+type Finder struct {
 	FilePaths [3]string
-	Dumps     [3]*Dump
+	Dumps     [3]*obj.Dump
 	Leaks     []*string
 	Verbose   bool
 }
 
-func (s *LeakFinder) Process() error {
+func (s *Finder) Process() error {
 	for i, filePath := range s.FilePaths {
 		s.log(fmt.Sprintf("Parsing %s", filePath))
-		dump := NewDump(filePath)
+		dump := obj.NewDump(filePath)
 
 		err := dump.Process()
 		if err != nil {
@@ -32,17 +36,17 @@ func (s *LeakFinder) Process() error {
 	return nil
 }
 
-func (s *LeakFinder) PrintLeakedAddresses() {
+func (s *Finder) PrintLeakedAddresses() {
 	s.log("\nLeaked Addresses:")
 	s.Dumps[1].PrintEntryAddress(s.FindLeaks())
 }
 
-func (s *LeakFinder) PrintLeakedObjects() {
+func (s *Finder) PrintLeakedObjects() {
 	s.log("\nLeaked Objects:")
 	s.Dumps[1].PrintEntryJSON(s.FindLeaks())
 }
 
-func (s *LeakFinder) FindLeaks() []*string {
+func (s *Finder) FindLeaks() []*string {
 	if s.Leaks != nil {
 		return s.Leaks
 	}
@@ -70,7 +74,7 @@ func (s *LeakFinder) FindLeaks() []*string {
 	return s.Leaks
 }
 
-func (s *LeakFinder) log(msg string) {
+func (s *Finder) log(msg string) {
 	if s.Verbose {
 		fmt.Println(msg)
 	}

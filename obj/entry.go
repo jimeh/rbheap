@@ -1,4 +1,4 @@
-package main
+package obj
 
 func NewEntry(inputJSON []byte) (*Entry, error) {
 	obj, err := NewObject(inputJSON)
