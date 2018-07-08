@@ -4,7 +4,6 @@ package obj
 
 import (
 	json "encoding/json"
-
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
@@ -18,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjsonE44bcf2dDecodeGithubComJimehRbheapleak(in *jlexer.Lexer, out *Object) {
+func easyjsonE44bcf2dDecodeGithubComJimehRbheapObj(in *jlexer.Lexer, out *Object) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -51,7 +50,7 @@ func easyjsonE44bcf2dDecodeGithubComJimehRbheapleak(in *jlexer.Lexer, out *Objec
 		in.Consumed()
 	}
 }
-func easyjsonE44bcf2dEncodeGithubComJimehRbheapleak(out *jwriter.Writer, in Object) {
+func easyjsonE44bcf2dEncodeGithubComJimehRbheapObj(out *jwriter.Writer, in Object) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -81,23 +80,23 @@ func easyjsonE44bcf2dEncodeGithubComJimehRbheapleak(out *jwriter.Writer, in Obje
 // MarshalJSON supports json.Marshaler interface
 func (v Object) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonE44bcf2dEncodeGithubComJimehRbheapleak(&w, v)
+	easyjsonE44bcf2dEncodeGithubComJimehRbheapObj(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Object) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonE44bcf2dEncodeGithubComJimehRbheapleak(w, v)
+	easyjsonE44bcf2dEncodeGithubComJimehRbheapObj(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Object) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonE44bcf2dDecodeGithubComJimehRbheapleak(&r, v)
+	easyjsonE44bcf2dDecodeGithubComJimehRbheapObj(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Object) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonE44bcf2dDecodeGithubComJimehRbheapleak(l, v)
+	easyjsonE44bcf2dDecodeGithubComJimehRbheapObj(l, v)
 }

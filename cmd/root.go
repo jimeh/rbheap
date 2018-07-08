@@ -18,8 +18,8 @@ type BuildInfo struct {
 }
 
 var rootCmd = &cobra.Command{
-	Use:           "rbheapleak",
-	Short:         "rbheapleak analyzes ObjectSpace dumps from Ruby processes.",
+	Use:           "rbheap",
+	Short:         "rbheap analyzes ObjectSpace dumps from Ruby processes.",
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }

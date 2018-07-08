@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jimeh/rbheapleak/cmd"
+	"github.com/jimeh/rbheap/cmd"
 )
 
 var (

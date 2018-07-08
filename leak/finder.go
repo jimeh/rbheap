@@ -3,7 +3,7 @@ package leak
 import (
 	"fmt"
 
-	"github.com/jimeh/rbheapleak/obj"
+	"github.com/jimeh/rbheap/obj"
 )
 
 func NewFinder(file1, file2, file3 string) *Finder {

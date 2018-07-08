@@ -1,7 +1,7 @@
-project_name: rbheapleak
+project_name: rbheap
 builds:
   - main: main.go
-    binary: rbheapleak
+    binary: rbheap
     flags: -a
     env:
       - CGO_ENABLED=0

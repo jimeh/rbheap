@@ -1,6 +1,6 @@
 DEV_DEPS = github.com/mailru/easyjson/...
 
-NAME = rbheapleak
+NAME = rbheap
 BINARY = bin/${NAME}
 VERSION ?= $(shell cat VERSION)
 
@@ -31,11 +31,11 @@ clean:
 
 .PHONY: test
 test:
-	go test
+	go test ./...
 
 .PHONY: generate
 generate: dev-deps
-	go generate
+	go generate ./...
 
 #
 # EasyJSON targets.

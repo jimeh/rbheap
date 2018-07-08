@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/jimeh/rbheapleak/leak"
+	"github.com/jimeh/rbheap/leak"
 	"github.com/spf13/cobra"
 )
 
