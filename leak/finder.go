@@ -48,9 +48,9 @@ func (s *Finder) PrintLeakedAddresses() {
 	s.Dumps[1].PrintEntryAddress(s.FindLeaks())
 }
 
-func (s *Finder) PrintLeakedObjects() {
+func (s *Finder) PrintLeakedObjects() error {
 	s.log("\nLeaked Objects:")
-	s.Dumps[1].PrintEntryJSON(s.FindLeaks())
+	return s.Dumps[1].PrintEntryJSON(s.FindLeaks())
 }
 
 func (s *Finder) FindLeaks() []*string {

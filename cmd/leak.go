@@ -39,7 +39,10 @@ objects are present in both B and C, and not present in A.`,
 		case "hex":
 			finder.PrintLeakedAddresses()
 		case "json":
-			finder.PrintLeakedObjects()
+			err := finder.PrintLeakedObjects()
+			if err != nil {
+				er(err)
+			}
 		default:
 			usage_er(
 				cmd,
