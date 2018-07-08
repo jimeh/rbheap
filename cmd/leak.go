@@ -55,7 +55,7 @@ func init() {
 	leakCmd.PersistentFlags().StringVarP(
 		&leakOpts.Format,
 		"format", "f", "hex",
-		"Output format: \"hex\" / \"full\"",
+		"output format: \"hex\" / \"full\"",
 	)
 
 	leakCmd.PersistentFlags().BoolVarP(
