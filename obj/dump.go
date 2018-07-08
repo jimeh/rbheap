@@ -8,6 +8,7 @@ import (
 	"sort"
 )
 
+// NewDump returns a *Dump instance populated with the specified file path.
 func NewDump(filePath string) *Dump {
 	return &Dump{FilePath: filePath}
 }
@@ -54,6 +55,8 @@ func (s *Dump) Process() error {
 	return nil
 }
 
+// PrintEntryAddress prints the memory addresses in hex (0x...) format of the
+// entries for the list of given indexes.
 func (s *Dump) PrintEntryAddress(indexes []*string) {
 	for _, index := range indexes {
 		if entry, ok := s.Entries[*index]; ok {
@@ -62,6 +65,9 @@ func (s *Dump) PrintEntryAddress(indexes []*string) {
 	}
 }
 
+// PrintEntryJSON prints the full JSON blob from the input file for the entries
+// with the given indexes. It does this by using the Offset value of the entries
+// to avoid having to load up the whole dump file in memory.
 func (s *Dump) PrintEntryJSON(indexes []*string) error {
 	file, err := os.Open(s.FilePath)
 	defer file.Close()
