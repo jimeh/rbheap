@@ -6,7 +6,8 @@ A tool for working with and analyzing Ruby processes' heap dumps created via
 ## How to dump the heap
 
 Dumping the heap from a running Ruby process is not very difficult as long as
-your app has required the `rbtrace` gem. The steps are:
+your app has required the [`rbtrace`](https://github.com/tmm1/rbtrace) gem. The
+steps are:
 
 1. Add the `rbtrace` gem to your application, and require it in your code when
    the application boots.
