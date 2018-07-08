@@ -2,6 +2,7 @@ package leak
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/jimeh/rbheap/obj"
 )
@@ -21,6 +22,7 @@ type Finder struct {
 
 func (s *Finder) Process() error {
 	for i, filePath := range s.FilePaths {
+		start := time.Now()
 		s.log(fmt.Sprintf("Parsing %s", filePath))
 		dump := obj.NewDump(filePath)
 
@@ -30,7 +32,12 @@ func (s *Finder) Process() error {
 		}
 
 		s.Dumps[i] = dump
-		s.log(fmt.Sprintf("Parsed %d objects", len(dump.Index)))
+		elapsed := time.Now().Sub(start)
+		s.log(fmt.Sprintf(
+			"Parsed %d objects in %.6f seconds",
+			len(dump.Index),
+			elapsed.Seconds(),
+		))
 	}
 
 	return nil
