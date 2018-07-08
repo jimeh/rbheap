@@ -3,3 +3,4 @@
 .DStore
 bin/*
 dist/*
+test/*.jsonl
