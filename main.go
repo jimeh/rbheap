@@ -49,51 +49,21 @@ func versionString() string {
 	return buffer.String()
 }
 
-func logMsg(msg string) {
-	if !*silentFlag {
-		fmt.Println(msg)
-	}
-}
-
-func loadDump(filePath string) (*ObjectDump, error) {
-	logMsg(fmt.Sprintf("--> Loading %s...", filePath))
-	dump, err := NewObjectDump(filePath)
-	logMsg(fmt.Sprintf("    Loaded %d addresses", len(dump.Index)))
-	return dump, err
-}
-
-func printHexDiff(leaked *[]string, dump *ObjectDump) {
-	for _, index := range *leaked {
-		if entry, ok := dump.Entries[index]; ok {
-			fmt.Println(entry.Object.Address)
-		}
-	}
-}
-
 func main() {
 	kingpin.Version(versionString())
 	kingpin.Parse()
 
-	dump1, err := loadDump(*file1Path)
+	finder := NewLeakFinder(*file1Path, *file2Path, *file3Path)
+	finder.Verbose = !*silentFlag
+
+	err := finder.Process()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	dump2, err := loadDump(*file2Path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	dump3, err := loadDump(*file3Path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	leaked := DiffSect(&dump1.Index, &dump2.Index, &dump3.Index)
 
 	if *formatFlag == "hex" {
-		printHexDiff(leaked, dump2)
+		finder.PrintLeakedAddresses()
 	} else if *formatFlag == "full" {
-		dump2.PrintMatchingJSON(leaked)
+		finder.PrintLeakedObjects()
 	}
 }

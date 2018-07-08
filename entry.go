@@ -18,3 +18,7 @@ type Entry struct {
 	Offset int64
 	Index  string
 }
+
+func (s *Entry) Address() string {
+	return s.Object.Address
+}

@@ -8,16 +8,14 @@ import (
 	"sort"
 )
 
-func NewObjectDump(file string) (*ObjectDump, error) {
-	heapDump := ObjectDump{File: file}
-	err := heapDump.Process()
-	return &heapDump, err
+func NewObjectDump(file string) *ObjectDump {
+	return &ObjectDump{File: file}
 }
 
 // ObjectDump contains all relevant data for a single heap dump.
 type ObjectDump struct {
 	File    string
-	Index   []string
+	Index   []*string
 	Entries map[string]*Entry
 }
 
@@ -32,8 +30,8 @@ func (s *ObjectDump) Process() error {
 
 	s.Entries = map[string]*Entry{}
 
-	reader := bufio.NewReader(file)
 	var offset int64 = -1
+	reader := bufio.NewReader(file)
 	for {
 		offset++
 		line, err := reader.ReadBytes(byte('\n'))
@@ -50,13 +48,21 @@ func (s *ObjectDump) Process() error {
 
 		entry.Offset = offset
 		s.Entries[entry.Index] = entry
-		s.Index = append(s.Index, entry.Index)
+		s.Index = append(s.Index, &entry.Index)
 	}
 
 	return nil
 }
 
-func (s *ObjectDump) PrintMatchingJSON(indexes *[]string) error {
+func (s *ObjectDump) PrintEntryAddress(indexes []*string) {
+	for _, index := range indexes {
+		if entry, ok := s.Entries[*index]; ok {
+			fmt.Println(entry.Address())
+		}
+	}
+}
+
+func (s *ObjectDump) PrintEntryJSON(indexes []*string) error {
 	file, err := os.Open(s.File)
 	defer file.Close()
 
@@ -64,12 +70,10 @@ func (s *ObjectDump) PrintMatchingJSON(indexes *[]string) error {
 		return err
 	}
 
-	reader := bufio.NewReader(file)
-	offsets := s.matchingOffsets(indexes)
-
-	var current int64 = 0
+	offsets := s.sortedOffsets(indexes)
+	var current int64
 	var offset int64 = -1
-
+	reader := bufio.NewReader(file)
 	for {
 		offset++
 		line, err := reader.ReadBytes(byte('\n'))
@@ -88,13 +92,13 @@ func (s *ObjectDump) PrintMatchingJSON(indexes *[]string) error {
 	return nil
 }
 
-func (s *ObjectDump) matchingOffsets(indexes *[]string) []int64 {
-	var offsets []int64
+func (s *ObjectDump) sortedOffsets(indexes []*string) []int64 {
+	var res []int64
 
-	for _, index := range *indexes {
-		offsets = append(offsets, s.Entries[index].Offset)
+	for _, index := range indexes {
+		res = append(res, s.Entries[*index].Offset)
 	}
+	sort.Slice(res, func(i, j int) bool { return res[i] < res[j] })
 
-	sort.Slice(offsets, func(i, j int) bool { return offsets[i] < offsets[j] })
-	return offsets
+	return res
 }
