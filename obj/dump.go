@@ -71,6 +71,12 @@ func (s *Dump) PrintEntryJSON(indexes []*string) error {
 	}
 
 	offsets := s.sortedOffsets(indexes)
+	offsetsLength := int64(len(offsets))
+
+	if offsetsLength == 0 {
+		return nil
+	}
+
 	var current int64
 	var offset int64 = -1
 	reader := bufio.NewReader(file)
@@ -86,6 +92,10 @@ func (s *Dump) PrintEntryJSON(indexes []*string) error {
 		if offset == offsets[current] {
 			current++
 			fmt.Print(string(line))
+		}
+
+		if current >= offsetsLength-1 {
+			break
 		}
 	}
 
