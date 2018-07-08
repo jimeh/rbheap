@@ -7,9 +7,9 @@ import (
 	"github.com/jimeh/rbheap/obj"
 )
 
-func NewFinder(file1, file2, file3 string) *Finder {
+func NewFinder(filePath1, filePath2, filePath3 string) *Finder {
 	return &Finder{
-		FilePaths: [3]string{file1, file2, file3},
+		FilePaths: [3]string{filePath1, filePath2, filePath3},
 	}
 }
 

@@ -8,20 +8,20 @@ import (
 	"sort"
 )
 
-func NewDump(file string) *Dump {
-	return &Dump{File: file}
+func NewDump(filePath string) *Dump {
+	return &Dump{FilePath: filePath}
 }
 
 // Dump contains all relevant data for a single heap dump.
 type Dump struct {
-	File    string
-	Index   []*string
-	Entries map[string]*Entry
+	FilePath string
+	Index    []*string
+	Entries  map[string]*Entry
 }
 
 // Process processes the heap dump
 func (s *Dump) Process() error {
-	file, err := os.Open(s.File)
+	file, err := os.Open(s.FilePath)
 	defer file.Close()
 
 	if err != nil {
@@ -63,7 +63,7 @@ func (s *Dump) PrintEntryAddress(indexes []*string) {
 }
 
 func (s *Dump) PrintEntryJSON(indexes []*string) error {
-	file, err := os.Open(s.File)
+	file, err := os.Open(s.FilePath)
 	defer file.Close()
 
 	if err != nil {
