@@ -10,7 +10,7 @@ func NewLeakFinder(file1, file2, file3 string) *LeakFinder {
 
 type LeakFinder struct {
 	FilePaths [3]string
-	Dumps     [3]*ObjectDump
+	Dumps     [3]*Dump
 	Leaks     []*string
 	Verbose   bool
 }
@@ -18,7 +18,7 @@ type LeakFinder struct {
 func (s *LeakFinder) Process() error {
 	for i, filePath := range s.FilePaths {
 		s.log(fmt.Sprintf("Parsing %s", filePath))
-		dump := NewObjectDump(filePath)
+		dump := NewDump(filePath)
 
 		err := dump.Process()
 		if err != nil {

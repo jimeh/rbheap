@@ -8,19 +8,19 @@ import (
 	"sort"
 )
 
-func NewObjectDump(file string) *ObjectDump {
-	return &ObjectDump{File: file}
+func NewDump(file string) *Dump {
+	return &Dump{File: file}
 }
 
-// ObjectDump contains all relevant data for a single heap dump.
-type ObjectDump struct {
+// Dump contains all relevant data for a single heap dump.
+type Dump struct {
 	File    string
 	Index   []*string
 	Entries map[string]*Entry
 }
 
 // Process processes the heap dump
-func (s *ObjectDump) Process() error {
+func (s *Dump) Process() error {
 	file, err := os.Open(s.File)
 	defer file.Close()
 
@@ -54,7 +54,7 @@ func (s *ObjectDump) Process() error {
 	return nil
 }
 
-func (s *ObjectDump) PrintEntryAddress(indexes []*string) {
+func (s *Dump) PrintEntryAddress(indexes []*string) {
 	for _, index := range indexes {
 		if entry, ok := s.Entries[*index]; ok {
 			fmt.Println(entry.Address())
@@ -62,7 +62,7 @@ func (s *ObjectDump) PrintEntryAddress(indexes []*string) {
 	}
 }
 
-func (s *ObjectDump) PrintEntryJSON(indexes []*string) error {
+func (s *Dump) PrintEntryJSON(indexes []*string) error {
 	file, err := os.Open(s.File)
 	defer file.Close()
 
@@ -92,7 +92,7 @@ func (s *ObjectDump) PrintEntryJSON(indexes []*string) error {
 	return nil
 }
 
-func (s *ObjectDump) sortedOffsets(indexes []*string) []int64 {
+func (s *Dump) sortedOffsets(indexes []*string) []int64 {
 	var res []int64
 
 	for _, index := range indexes {
