@@ -4,10 +4,6 @@ NAME = rbheap
 BINARY = bin/${NAME}
 VERSION ?= $(shell cat VERSION)
 
-#
-# Main targets.
-#
-
 SOURCES = $(shell find . -name '*.go' -o -name 'Makefile' -o -name 'VERSION')
 
 all: bootstrap generate build
@@ -37,22 +33,8 @@ test:
 generate: dev-deps
 	go generate ./...
 
-#
-# EasyJSON targets.
-#
-
-EASYJSON_FILES = $(shell find . -name '*_easyjson.go' -not -path '*/vendor/*')
-
-define easyjson_file
-$(1): $(subst _easyjson.go,.go,$(1))
-	easyjson -all $$^
-endef
-
-$(foreach file,$(EASYJSON_FILES),$(eval $(call easyjson_file,$(file))))
-
-#
-# Dependency targets.
-#
+%_easyjson.go: %.go
+	easyjson -all $^
 
 .PHONY: dep-ensure
 dep-ensure:
