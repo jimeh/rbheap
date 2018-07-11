@@ -1,5 +1,7 @@
 require 'objspace'
 
+ObjectSpace.trace_object_allocations_start
+
 class Leaky
   def self.leak
     @leak ||= []
@@ -8,7 +10,7 @@ class Leaky
   def doit
     noleak = []
 
-    50.times do
+    100.times do
       self.class.leak << 'leaked memory'
       noleak << 'not leaked'
     end
@@ -21,8 +23,8 @@ def dump_heap(filename)
 end
 
 Leaky.new.doit
-dump_heap('heap1.jsonl')
+dump_heap(File.expand_path('./heap1.jsonl', __dir__))
 Leaky.new.doit
-dump_heap('heap2.jsonl')
+dump_heap(File.expand_path('./heap2.jsonl', __dir__))
 Leaky.new.doit
-dump_heap('heap3.jsonl')
+dump_heap(File.expand_path('./heap3.jsonl', __dir__))

@@ -1,4 +1,4 @@
-package obj
+package leak
 
 // NewEntry returns a new *Entry instance initialized with a *Object of the
 // given input JSON data.

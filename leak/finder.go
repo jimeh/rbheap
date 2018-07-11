@@ -3,8 +3,6 @@ package leak
 import (
 	"fmt"
 	"time"
-
-	"github.com/jimeh/rbheap/obj"
 )
 
 // NewFinder returns a new *Finder instance, populated with the three given file
@@ -19,7 +17,7 @@ func NewFinder(filePath1, filePath2, filePath3 string) *Finder {
 // from a Ruby process.
 type Finder struct {
 	FilePaths [3]string
-	Dumps     [3]*obj.Dump
+	Dumps     [3]*Dump
 	Leaks     []*string
 	Verbose   bool
 }
@@ -29,7 +27,7 @@ func (s *Finder) Process() error {
 	for i, filePath := range s.FilePaths {
 		start := time.Now()
 		s.log(fmt.Sprintf("Parsing %s", filePath))
-		dump := obj.NewDump(filePath)
+		dump := NewDump(filePath)
 
 		err := dump.Process()
 		if err != nil {
