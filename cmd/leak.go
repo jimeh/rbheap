@@ -7,11 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var leakOpts = struct {
-	Format  string
-	Verbose bool
-}{}
-
 // leakCmd represents the leak command
 var leakCmd = &cobra.Command{
 	Use:   "leak [flags] <dump-A> <dump-B> <dump-C>",
@@ -50,6 +45,11 @@ objects are present in both B and C, and not present in A.`,
 		}
 	},
 }
+
+var leakOpts = struct {
+	Format  string
+	Verbose bool
+}{}
 
 func init() {
 	rootCmd.AddCommand(leakCmd)
