@@ -17,7 +17,7 @@ func NewObject(inputJSON []byte) (*Object, error) {
 // `ObjectSpace.dump_all`.
 type Object struct {
 	Address    string           `json:"address"`
-	Bytesize   int              `json:"bytesize"`
+	ByteSize   int64            `json:"bytesize"`
 	Capacity   int              `json:"capacity"`
 	Class      string           `json:"class"`
 	Default    string           `json:"default"`
@@ -31,15 +31,15 @@ type Object struct {
 	Generation int              `json:"generation"`
 	ImemoType  string           `json:"imemo_type"`
 	Ivars      int              `json:"ivars"`
-	Length     int              `json:"length"`
+	Length     int64            `json:"length"`
 	Line       int              `json:"line"`
-	Memsize    int              `json:"memsize"`
+	MemSize    int64            `json:"memsize"`
 	Method     string           `json:"method"`
 	Name       string           `json:"name"`
 	References ObjectReferences `json:"references"`
 	Root       string           `json:"root"`
 	Shared     bool             `json:"shared"`
-	Size       int              `json:"size"`
+	Size       int64            `json:"size"`
 	Struct     string           `json:"struct"`
 	Type       string           `json:"type"`
 	Value      string           `json:"value"`
