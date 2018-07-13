@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/jimeh/rbheap/leak"
 	"github.com/spf13/cobra"
@@ -29,11 +30,13 @@ objects are present in both B and C, and not present in A.`,
 			er(err)
 		}
 
+		output := os.Stdout
+
 		switch leakOpts.Format {
 		case "hex":
-			finder.PrintLeakedAddresses()
+			finder.WriteLeakedAddresses(output)
 		case "json":
-			err := finder.PrintLeakedObjects()
+			err := finder.WriteLeakedObjects(output)
 			if err != nil {
 				er(err)
 			}

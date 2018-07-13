@@ -55,20 +55,20 @@ func (s *Dump) Process() error {
 	return nil
 }
 
-// PrintEntryAddress prints the memory addresses in hex (0x...) format of the
+// WriteEntryAddresses prints the memory addresses in hex (0x...) format of the
 // entries for the list of given indexes.
-func (s *Dump) PrintEntryAddress(indexes []*string) {
+func (s *Dump) WriteEntryAddresses(w io.Writer, indexes []*string) {
 	for _, index := range indexes {
 		if entry, ok := s.Entries[*index]; ok {
-			fmt.Println(entry.Address())
+			fmt.Fprintln(w, entry.Address())
 		}
 	}
 }
 
-// PrintEntryJSON prints the full JSON blob from the input file for the entries
+// WriteEntryJSON prints the full JSON blob from the input file for the entries
 // with the given indexes. It does this by using the Offset value of the entries
 // to avoid having to load up the whole dump file in memory.
-func (s *Dump) PrintEntryJSON(indexes []*string) error {
+func (s *Dump) WriteEntryJSON(w io.Writer, indexes []*string) error {
 	file, err := os.Open(s.FilePath)
 	defer file.Close()
 
@@ -97,7 +97,7 @@ func (s *Dump) PrintEntryJSON(indexes []*string) error {
 
 		if offset == offsets[current] {
 			current++
-			fmt.Print(string(line))
+			fmt.Fprint(w, string(line))
 		}
 
 		if current >= offsetsLength-1 {

@@ -3,6 +3,7 @@ package leak
 import (
 	"fmt"
 	"io"
+	"os"
 	"time"
 )
 
@@ -48,18 +49,18 @@ func (s *Finder) Process() error {
 	return nil
 }
 
-// PrintLeakedAddresses prints the memory addresses in hex (0x...) format for
+// WriteLeakedAddresses prints the memory addresses in hex (0x...) format for
 // all objects which are likely to be leaked memory.
-func (s *Finder) PrintLeakedAddresses() {
-	s.log("\nLeaked Addresses:")
-	s.Dumps[1].PrintEntryAddress(s.FindLeaks())
+func (s *Finder) WriteLeakedAddresses(w io.Writer) {
+	s.verbose("\nLeaked Addresses:")
+	s.Dumps[1].WriteEntryAddresses(w, s.FindLeaks())
 }
 
-// PrintLeakedObjects prints the full JSON blobs for all objects which are
+// WriteLeakedObjects prints the full JSON blobs for all objects which are
 // likely to be memory leaks.
-func (s *Finder) PrintLeakedObjects() error {
-	s.log("\nLeaked Objects:")
-	return s.Dumps[1].PrintEntryJSON(s.FindLeaks())
+func (s *Finder) WriteLeakedObjects(w io.Writer) error {
+	s.verbose("\nLeaked Objects:")
+	return s.Dumps[1].WriteEntryJSON(w, s.FindLeaks())
 }
 
 // FindLeaks finds potential memory leaks by removing all objects in heap dump
