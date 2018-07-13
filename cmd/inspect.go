@@ -12,7 +12,6 @@ var inspectCmd = &cobra.Command{
 
 var inspectOpts = struct {
 	Verbose bool
-	Output  string
 }{}
 
 func init() {
