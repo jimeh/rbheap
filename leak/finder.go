@@ -2,6 +2,7 @@ package leak
 
 import (
 	"fmt"
+	"io"
 	"time"
 )
 
@@ -16,17 +17,18 @@ func NewFinder(filePath1, filePath2, filePath3 string) *Finder {
 // Finder helps with finding a memory leak across three different memory dumps
 // from a Ruby process.
 type Finder struct {
-	FilePaths [3]string
-	Dumps     [3]*Dump
-	Leaks     []*string
-	Verbose   bool
+	FilePaths     [3]string
+	Dumps         [3]*Dump
+	Leaks         []*string
+	Verbose       bool
+	VerboseWriter io.Writer
 }
 
 // Process will will load and process each of the dump files.
 func (s *Finder) Process() error {
 	for i, filePath := range s.FilePaths {
 		start := time.Now()
-		s.log(fmt.Sprintf("Parsing %s", filePath))
+		s.verbose(fmt.Sprintf("Parsing %s", filePath))
 		dump := NewDump(filePath)
 
 		err := dump.Process()
@@ -36,7 +38,7 @@ func (s *Finder) Process() error {
 
 		s.Dumps[i] = dump
 		elapsed := time.Now().Sub(start)
-		s.log(fmt.Sprintf(
+		s.verbose(fmt.Sprintf(
 			"Parsed %d objects in %.6f seconds",
 			len(dump.Index),
 			elapsed.Seconds(),
@@ -94,5 +96,17 @@ func (s *Finder) FindLeaks() []*string {
 func (s *Finder) log(msg string) {
 	if s.Verbose {
 		fmt.Println(msg)
+	}
+}
+
+func (s *Finder) verbose(msg string) {
+	if s.Verbose {
+		w := s.VerboseWriter
+
+		if w == nil {
+			w = os.Stderr
+		}
+
+		fmt.Fprintln(w, msg)
 	}
 }
