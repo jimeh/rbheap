@@ -76,12 +76,14 @@ func (s *SourceInspector) ByLine(w io.Writer) {
 	lines := []*Line{}
 
 	for _, obj := range s.Dump.Objects {
-		if _, ok := lineMap[obj.File]; !ok {
+		key := fmt.Sprintf("%s:%d", obj.File, obj.Line)
+
+		if _, ok := lineMap[key]; !ok {
 			line := NewLine(obj.File, obj.Line)
 			lines = append(lines, line)
-			lineMap[obj.File] = line
+			lineMap[key] = line
 		}
-		lineMap[obj.File].Add(obj)
+		lineMap[key].Add(obj)
 	}
 
 	switch s.SortBy {
