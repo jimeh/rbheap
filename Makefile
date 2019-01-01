@@ -7,7 +7,7 @@ VERSION ?= $(shell cat VERSION)
 SOURCES = $(shell find . -name '*.go' -o -name 'Makefile' -o -name 'VERSION')
 
 all: bootstrap generate build
-bootstrap: dev-deps dep-ensure
+bootstrap: dev-deps
 
 $(BINARY): $(SOURCES)
 	CGO_ENABLED=0 go build -a -o ${BINARY} -ldflags \ "\
@@ -30,15 +30,11 @@ test:
 	go test ./...
 
 .PHONY: generate
-generate: dev-deps
+generate:
 	go generate ./...
 
 %_easyjson.go: %.go
 	easyjson -all $^
-
-.PHONY: dep-ensure
-dep-ensure:
-	dep ensure
 
 .PHONY: dev-deps
 dev-deps:
